@@ -14,7 +14,7 @@ __requirements__ = "tkinter, Pillow, SSH access"
 __status__ = "Testing on different OS"
 __description__ = "This script creates a software that launches SSH commands"
 
-
+#Notice there are random examples to launch scripts inside the servers
 
 window = Tk()
 window.title('SSH Remote Support Software 1.0 BETA Windows Version')
@@ -62,60 +62,50 @@ def download():
     ssh.connect(e1_value.get() + '.yourdomain.com', port, username, password)
     # SCPCLient takes a paramiko transport as an argument
     scp = SCPClient(ssh.get_transport())
-    # we read the outputs, as we can't download more than 1 file
+    # we read the outputs, as we can't download more than 1 file with this 'hack'
     stdin, stdout, stderr = ssh.exec_command('ls /var/tmp/test-*.mp4')
     file_list = stdout.read().split()
     for listed_file in file_list:
         scp.get(listed_file)
         scp.close()
 
-# Indivual functions for each button
 def list_num_pend_upload():
     order = 'ls /home/user/record | wc -l'
     print_output(order)
-#WORKS
 
 def list_pend_upload():
     order = 'ls /home/user/record'
     print_output(order)
-#WORKS
 
 def list_rec_channels():
     order = 'bash /usr/lib/check_mk_agent/plugins/rec_channels'
     print_output(order)
-#WORKS
 
 def dvbrecd_restart():
     order = 'service dvbrecd restart'
     execute_not_print(order)
-#Creates restart but doesn't start
 
 def streams_restart():
     order = 'bash /home/user/restartStoppedStreams.sh'
     print_output(order)
-#WORKS
 
 def analogtvd_restart():
     order = 'service analogtvd restart'
     execute_not_print(order)
     data = "Done! Please check again in 5 minutes"
     t2.insert(END, data)
-#WORKS
 
 def analogtvd_testrecord():
     t2.delete("1.0", END)
-    # da muchos problemas!!!
     order = 'bash /home/user/newconfig/check_channels.sh'
     tkinter.messagebox.showinfo(message="Please check after 5 minutes", title="Command launched")
     execute_not_print(order)
     download()
     data = "Done!"
     t2.insert(END, data)
-#Hace restart pero no graba
 
 def dvbrecd_testrecord():
     t2.delete("1.0", END)
-    # It gives a lot of errors launching this script through SSH
     tkinter.messagebox.showinfo(message="Warning! Don't close the program while it does the operation"
                                 "\nPlease wait until a new window appears",
                                 title="Command launched")
@@ -125,7 +115,6 @@ def dvbrecd_testrecord():
     tkinter.messagebox.showinfo(message="Done! Please check files in same folder", title="Command launched")
     data = "Done!"
     t2.insert(END, data)
-#WORKS
 
 def reboot_server():
     t2.delete("1.0", END)
@@ -143,7 +132,6 @@ def reboot_server():
         t2.delete("1.0", END)
         data = "Setup not rebooted"
         t2.insert(END, data)
-#WORKS
 
 # Frontend buttons, each calls operation
 b1 = Button(window, text="List number of files pending to upload (rec folder)", bg='IndianRed2', fg='snow',
@@ -173,7 +161,7 @@ b8 = Button(window, text="Record 10 seconds Digital TV & IPTV module", bg='India
             command=dvbrecd_testrecord)
 b8.grid(row=8, column=0)
 
-b9 = Button(window, text="Reboot recording unit", bg='IndianRed2', fg='snow', command=reboot_server)
+b9 = Button(window, text="Reboot server", bg='IndianRed2', fg='snow', command=reboot_server)
 b9.grid(row=9, column=0)
 
 # IMPORTANT: entry of text by user
@@ -181,14 +169,14 @@ e1_value = StringVar()
 e1 = Entry(window, textvariable=e1_value)
 e1.grid(row=0, column=1)
 
-l1 = Label(window, text="Please insert the recording unit name here ->")
+l1 = Label(window, text="Please insert the server name here ->")
 l1.grid(row=0, column=0)
 
 # Outputs of the operations!
 t2 = Text(window, height=1, width=100)
 
 t2.grid(row=1, column=1, rowspan=20, columnspan=8, sticky=W + E + N + S, padx=5, pady=5)
-# BMAT Logo
+# Company Logo
 logo_path = 'company_logo.jpg'
 img = ImageTk.PhotoImage(Image.open("company_logo.jpg"))
 # imglabel = Label(window, image=img).grid(row=0, column=3, rowspan=5, sticky=W+E+N+S, padx=5, pady=5)
